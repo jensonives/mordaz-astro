@@ -1,0 +1,180 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Plate from '../components/Plate.astro';
+import { site, beatLabel, shortDate, isoDate } from '../site';
+
+/* Everything below is derived. Add a Markdown file and the lead, the cards and
+   the archive all update themselves — there is nothing to keep in step. */
+const all = (await getCollection('pieces', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const [lead, ...rest] = all;
+const cards = rest.slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: site.name,
+  url: `${site.url}/`,
+  inLanguage: 'en-GB',
+  description: site.description,
+  author: { '@type': 'Person', name: site.author },
+  publisher: { '@type': 'Person', name: site.author },
+};
+---
+<Base
+  title={`${site.name} — ${site.tagline} by ${site.author}`}
+  description={site.description}
+  path="/"
+  jsonLd={jsonLd}
+>
+
+  <section class="hero" aria-labelledby="mark">
+    <div class="hero__mark bite-br">
+      <h1 class="mark" id="mark">
+        <span class="mark__word" aria-label={site.name}>
+          {site.name.split('').map((ch) => <span class="mark__l">{ch}</span>)}
+        </span>
+      </h1>
+
+      <p class="mark__gloss">
+        <span class="mark__phon">{site.pronunciation}</span>
+        <span class="mark__pos">{site.partOfSpeech}</span>
+        <span class="mark__def">{site.gloss}</span>
+      </p>
+
+      <p class="mark__blurb">{site.blurb}</p>
+
+      <p class="mark__by">
+        <span class="beat"><b>Sport</b></span>
+        <span class="beat"><b>Politics</b></span>
+        <span class="beat"><b>Economics</b></span>
+      </p>
+
+      <p class="mark__sig">Written by <a href="/#about">{site.author}</a></p>
+    </div>
+
+    {lead && (
+      <article class="lead">
+        <Plate
+          theySay={lead.data.theySay}
+          photo={lead.data.photo}
+          photoAlt={lead.data.photoAlt}
+          photoCredit={lead.data.photoCredit}
+          class="lead__fig"
+        />
+        <div class="lead__body">
+          <h2 class="lead__hed" data-reveal>
+            <a href={`/${lead.id}/`}>{lead.data.title}</a>
+          </h2>
+          <p class="lead__stand" data-reveal>{lead.data.standfirst}</p>
+          <p class="claim__meta" data-reveal>
+            <span class="bite-mark" aria-hidden="true"></span>
+            {beatLabel(lead.data.beat)}<i>&middot;</i>{lead.data.minutes} min<i>&middot;</i>{shortDate(lead.data.date)}
+          </p>
+          <p class="lead__more" data-reveal>
+            <a class="arrow" href={`/${lead.id}/`}>Read the piece<span aria-hidden="true"></span></a>
+          </p>
+        </div>
+      </article>
+    )}
+  </section>
+
+  {cards.length > 0 && (
+    <section class="band" id="latest" aria-labelledby="latest-h">
+      <div class="wrap">
+        <div class="rule" data-reveal>
+          <h2 class="rule__h" id="latest-h">Latest</h2>
+          <span class="rule__line" aria-hidden="true"></span>
+          <span class="rule__meta">{cards.length} {cards.length === 1 ? 'piece' : 'pieces'}</span>
+        </div>
+
+        <div class="cards">
+          {cards.map((p) => (
+            <article class="card" data-reveal>
+              <a class="card__link" href={`/${p.id}/`}>
+                <Plate
+                  theySay={p.data.theySay}
+                  photo={p.data.photo}
+                  photoAlt={p.data.photoAlt}
+                  class="card__fig"
+                />
+                <h3 class="card__hed">{p.data.title}</h3>
+                <p class="card__stand">{p.data.standfirst}</p>
+                <span class="claim__meta card__meta">
+                  <span class="bite-mark" aria-hidden="true"></span>
+                  {beatLabel(p.data.beat)}<i>&middot;</i>{p.data.minutes} min<i>&middot;</i>{shortDate(p.data.date)}
+                </span>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="band band--sunk" id="archive" aria-labelledby="arc-h">
+    <div class="wrap">
+      <div class="rule" data-reveal>
+        <h2 class="rule__h" id="arc-h">The archive</h2>
+        <span class="rule__line" aria-hidden="true"></span>
+        <span class="rule__meta"><span id="arc-count">{all.length}</span> pieces</span>
+      </div>
+
+      <div class="arc__bar">
+        <div class="filter" role="group" aria-label="Filter by beat">
+          <button class="chip is-on" data-filter="all" aria-pressed="true">Everything</button>
+          <button class="chip" data-filter="sport" aria-pressed="false">Sport</button>
+          <button class="chip" data-filter="politics" aria-pressed="false">Politics</button>
+          <button class="chip" data-filter="economics" aria-pressed="false">Economics</button>
+        </div>
+        <div class="filter filter--sort" role="group" aria-label="Sort pieces">
+          <button class="chip is-on" data-order="new" aria-pressed="true">Newest</button>
+          <button class="chip" data-order="az" aria-pressed="false">A&ndash;Z</button>
+        </div>
+      </div>
+
+      <ol class="arc" id="arc">
+        {all.map((p) => (
+          <li class="arc__row" data-beat={p.data.beat} data-date={isoDate(p.data.date)}>
+            <a href={`/${p.id}/`}>
+              <q class="arc__said">{p.data.theySay}</q>
+              <span class="arc__ours">{p.data.inFact}</span>
+              <span class="arc__beat">{beatLabel(p.data.beat)}</span>
+              <span class="arc__date">{shortDate(p.data.date)}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <p class="arc__empty" id="arc-empty" hidden>Nothing filed under that beat yet.</p>
+    </div>
+  </section>
+
+  <section class="band about bite-tr" id="about" aria-labelledby="about-h">
+    <div class="wrap about__grid">
+      <div class="about__l" data-reveal>
+        <h2 class="about__h" id="about-h">Why <span>{site.name}</span></h2>
+      </div>
+      <div class="about__r" data-reveal>
+        <p class="about__lede">
+          <em>Mordaz</em> is the Spanish for biting &mdash; the adjective reserved for criticism
+          that leaves a mark. It describes the writing, not the subject, which is the only
+          thing that could honestly cover a Tuesday budget and a Saturday result under one name.
+        </p>
+        <p>
+          Most bad arguments survive because nobody says them out loud. They sit underneath
+          the debate as an assumption everyone has agreed not to examine. So every piece here
+          starts by writing the assumption down, plainly and fairly, and then explains what is
+          wrong with it. If the received view turns out to be right, there was no piece to write.
+        </p>
+        <p class="about__by">
+          <span>{site.author}</span>
+          <a class="arrow" href={`mailto:${site.email}`}>Get in touch<span aria-hidden="true"></span></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</Base>

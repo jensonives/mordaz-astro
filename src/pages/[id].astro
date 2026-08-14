@@ -1,0 +1,153 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Plate from '../components/Plate.astro';
+import { site, beatLabel, longDate, isoDate } from '../site';
+
+/* One route for every piece, now and forever. Adding an article used to mean
+   copying a 300-line file and making 31 edits. */
+export async function getStaticPaths() {
+  const pieces = await getCollection('pieces', ({ data }) => !data.draft);
+  return pieces.map((piece) => ({ params: { id: piece.id }, props: { piece } }));
+}
+
+const { piece } = Astro.props;
+const d = piece.data;
+const { Content } = await render(piece);
+
+const description = `They say ${d.theySay}. In fact ${d.inFact}. ${d.standfirst}`;
+
+/* A per-piece Open Graph card if one has been generated, otherwise the
+   site-wide one — a missing image is worse than a generic image. */
+const ogImage = `/assets/img/og-${piece.id}.png`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'OpinionNewsArticle',
+  headline: d.title,
+  description: `They say ${d.theySay}. In fact ${d.inFact}.`,
+  datePublished: isoDate(d.date),
+  dateModified: isoDate(d.date),
+  inLanguage: 'en-GB',
+  articleSection: beatLabel(d.beat),
+  author: { '@type': 'Person', name: site.author },
+  publisher: { '@type': 'Person', name: site.author },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${site.url}/${piece.id}/` },
+  isPartOf: { '@type': 'Blog', name: site.name, url: `${site.url}/` },
+};
+---
+<Base
+  title={`${d.title} | ${site.name}`}
+  description={description}
+  path={`/${piece.id}/`}
+  ogType="article"
+  ogImage={ogImage}
+  themeColor="#C4202A"
+  jsonLd={jsonLd}
+>
+  <article>
+
+    <header class="ahead bite-br">
+      <div class="wrap">
+        <div class="ahead__in">
+          <dl class="recv">
+            <div class="recv__row">
+              <dt class="recv__label">They say</dt>
+              <dd class="recv__text"><q>{d.theySay}</q></dd>
+            </div>
+            <div class="recv__row recv__row--ours">
+              <dt class="recv__label">In fact</dt>
+              <dd class="recv__text">{d.inFact}</dd>
+            </div>
+          </dl>
+
+          <h1 class="ahead__hed">{d.title}</h1>
+          <p class="ahead__stand">{d.standfirst}</p>
+
+          <p class="ahead__by">
+            <span>By <b>{site.author}</b></span>
+            <span><time datetime={isoDate(d.date)}>{longDate(d.date)}</time></span>
+            <span>Filed under <b>{beatLabel(d.beat)}</b></span>
+            <span>{d.minutes} min</span>
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <figure class="afig">
+      <Plate
+        theySay={d.theySay}
+        photo={d.photo}
+        photoAlt={d.photoAlt}
+        photoCredit={d.photoCredit}
+        class="afig__img plate--wide"
+      />
+      <figcaption class="wrap afig__cap">
+        {d.photo ? (
+          <>
+            <b>{d.photoCredit ?? 'Photograph'}</b>
+            <span>{d.photoAlt}</span>
+          </>
+        ) : (
+          <>
+            <b>They say</b>
+            <span>The received view, struck through &middot; {site.name}</span>
+          </>
+        )}
+      </figcaption>
+    </figure>
+
+    {/* The body. Markdown in, styled HTML out — the .read rules do the rest. */}
+    <div class="band read">
+      <div class="wrap">
+        <div class="read__col">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <div class="aend">
+      <div class="wrap">
+        <div class="aend__in">
+          <p class="aend__by">Written by <b>{site.author}</b> &middot; {longDate(d.date)}</p>
+          <a class="arrow" href="/#archive">The archive<span aria-hidden="true"></span></a>
+        </div>
+      </div>
+    </div>
+
+  </article>
+
+  <section class="band resp bite-tr" id="responses" data-thread={piece.id} aria-labelledby="resp-h">
+    <div class="wrap">
+      <div class="resp__col">
+        <div class="resp__head">
+          <h2 class="resp__h" id="resp-h">Responses</h2>
+          <span class="resp__n" id="resp-count">0 responses</span>
+          <div class="resp__sort" role="group" aria-label="Sort responses">
+            <button type="button" data-sort="newest" aria-pressed="true">Newest</button>
+            <button type="button" data-sort="top" aria-pressed="false">Most agreed</button>
+          </div>
+        </div>
+
+        <form class="comp" id="comp">
+          <div class="comp__row">
+            <label class="u-sr" for="comp-name">Your name</label>
+            <input id="comp-name" name="name" type="text" placeholder="Your name (optional)" maxlength="40" autocomplete="name" />
+          </div>
+          <label class="u-sr" for="comp-body">Your response</label>
+          <textarea id="comp-body" name="body" placeholder="Say where this is wrong…" maxlength="1200" required></textarea>
+          <div class="comp__foot">
+            <button class="btn" id="comp-post" type="submit">Post response</button>
+            <span class="comp__count" id="comp-count">0 / 1200</span>
+            <span class="comp__note">Saved in this browser</span>
+          </div>
+        </form>
+
+        <div class="thread" id="thread"></div>
+        <p class="resp__empty" id="resp-empty" hidden>No responses yet. Yours would be the first.</p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline slot="scripts" src="/assets/js/comments.js" defer></script>
+</Base>

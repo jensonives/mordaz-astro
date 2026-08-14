@@ -1,0 +1,120 @@
+---
+import { site } from '../site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/" or "/mandate/" */
+  path: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  themeColor?: string;
+  /** Extra <script type="application/ld+json"> payload */
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogImage = '/assets/img/og.png',
+  ogType = 'website',
+  themeColor = '#F0E9DE',
+  jsonLd,
+} = Astro.props;
+
+const canonical = `${site.url}${path}`;
+const ogImageUrl = `${site.url}${ogImage}`;
+---
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="theme-color" content={themeColor} />
+<meta name="author" content={site.author} />
+{!site.live && <meta name="robots" content="noindex, nofollow" />}
+
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_GB" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-latin.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/newsreader-latin.woff2" crossorigin />
+<link rel="stylesheet" href="/assets/css/mordaz.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F0E9DE'/%3E%3Cpath d='M4 6h24v20H4z' fill='%23C4202A'/%3E%3Ccircle cx='28' cy='6' r='7' fill='%23F0E9DE'/%3E%3C/svg%3E" />
+<script is:inline>document.documentElement.className='js';</script>
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to the writing</a>
+
+<header class="bar" id="bar">
+  <div class="bar__in">
+    <a class="bar__mark" href="/" aria-label={`${site.name}, home`}>{site.name}</a>
+    <span class="bar__gloss" aria-hidden="true">mor&middot;DAZ &nbsp;<i>adj.</i>&nbsp; biting</span>
+    <nav class="bar__nav" aria-label="Sections">
+      <a href="/#latest">Latest</a>
+      <a href="/#archive">Archive</a>
+      <a href="/#about">About</a>
+    </nav>
+    <button class="bar__burger" id="burger" aria-expanded="false" aria-controls="drawer">
+      <span class="bar__burger-box" aria-hidden="true"><i></i><i></i></span>
+      <span class="u-sr">Open menu</span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" hidden>
+  <nav class="drawer__nav" aria-label="Sections">
+    <a href="/#latest"><em>01</em> Latest</a>
+    <a href="/#archive"><em>02</em> Archive</a>
+    <a href="/#about"><em>03</em> About</a>
+  </nav>
+  <p class="drawer__foot">mor&middot;DAZ &middot; <i>adj.</i> biting, scathing</p>
+</div>
+
+<main id="main">
+  <slot />
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="foot__mark" aria-hidden="true">{site.name}</p>
+    <div class="foot__cols">
+      <div>
+        <h3>Beats</h3>
+        <a href="/#archive">Sport</a><a href="/#archive">Politics</a><a href="/#archive">Economics</a>
+      </div>
+      <div>
+        <h3>More</h3>
+        <a href="/#archive">Archive</a><a href="/#about">About</a><a href={`mailto:${site.email}`}>Contact</a>
+      </div>
+    </div>
+    <p class="foot__fine">
+      <span>&copy; {new Date().getFullYear()} {site.author}</span>
+      <span class="foot__gloss">mor&middot;DAZ &middot; <i>adj.</i> biting, scathing</span>
+    </p>
+  </div>
+</footer>
+
+<script is:inline src="/assets/js/plates.js" defer></script>
+<script is:inline src="/assets/js/motion.js" defer></script>
+<slot name="scripts" />
+</body>
+</html>

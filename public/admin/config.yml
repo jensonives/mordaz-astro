@@ -1,0 +1,141 @@
+# ═══════════════════════════════════════════════════════════════════════
+# MORDAZ — the writing dashboard
+#
+# Every field below maps exactly onto src/content.config.ts. If the two ever
+# disagree, the CMS will happily save a file that then fails the build — so
+# change them together.
+# ═══════════════════════════════════════════════════════════════════════
+
+backend:
+  name: github
+  # ── SET THIS once the repo exists: your GitHub username / repo name ──
+  repo: your-github-username/mordaz
+  branch: main
+  # Netlify's own OAuth provider handles the login. No Netlify Identity —
+  # that is being sunset and cannot be enabled on new sites.
+  # Deploy day: Netlify → Site configuration → Access & security → OAuth
+  #             → Install provider → GitHub, using a GitHub OAuth App.
+
+# Lets you run the editor on this PC without GitHub, for trying it out:
+#   npm run cms      (in one terminal)
+#   npm run dev      (in another)   then open http://localhost:4322/admin/
+local_backend: true
+
+# Publishing goes straight to the live site rather than opening a draft PR.
+# Use the "Draft" toggle on a piece to keep it off the site instead.
+publish_mode: simple
+
+media_folder: "public/assets/img/uploads"
+public_folder: "/assets/img/uploads"
+
+site_url: https://mordaz.example
+display_url: https://mordaz.example
+
+collections:
+  - name: "pieces"
+    label: "Pieces"
+    label_singular: "Piece"
+    description: >
+      Every piece names the received view it is attacking, then rebuts it.
+      Write the received view fairly — if you strawman it, the rebuttal has
+      nothing to push against.
+    folder: "src/content/pieces"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    identifier_field: "title"
+    summary: "{{title}}  ·  {{beat}}  ·  {{date}}"
+    sortable_fields: ["date", "title", "beat"]
+    view_filters:
+      - { label: "Sport",     field: beat,  pattern: "sport" }
+      - { label: "Politics",  field: beat,  pattern: "politics" }
+      - { label: "Economics", field: beat,  pattern: "economics" }
+      - { label: "Drafts",    field: draft, pattern: "true" }
+
+    fields:
+      - label: "Headline"
+        name: "title"
+        widget: "string"
+        hint: "4–9 words. This is set at the largest size on the site."
+
+      - label: "They say"
+        name: "theySay"
+        widget: "string"
+        hint: >
+          The received view you are arguing with, in the words someone who
+          believes it would use. 4–9 words, lowercase, no full stop.
+          This becomes the image: set at poster scale and struck through in red.
+
+      - label: "In fact"
+        name: "inFact"
+        widget: "string"
+        hint: >
+          Your rebuttal, compressed. 4–9 words, lowercase, no full stop.
+          This is the line that carries the archive, so make it land on its own.
+
+      - label: "Standfirst"
+        name: "standfirst"
+        widget: "text"
+        hint: "The paragraph under the headline. 22–34 words."
+
+      - label: "Beat"
+        name: "beat"
+        widget: "select"
+        options: ["sport", "politics", "economics"]
+        default: "politics"
+
+      - label: "Date"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        picker_utc: true
+        hint: "Drives the order of everything. Newest first."
+
+      - label: "Reading time (minutes)"
+        name: "minutes"
+        widget: "number"
+        value_type: "int"
+        min: 1
+        max: 90
+        default: 8
+
+      - label: "Draft"
+        name: "draft"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "On = kept off the live site. Turn off to publish."
+
+      - label: "Photograph"
+        name: "photo"
+        widget: "image"
+        required: false
+        allow_multiple: false
+        hint: >
+          Optional. Leave empty and the piece gets a generated plate instead.
+          You never need to colour-correct — the site grades every photo into
+          its own three colours automatically.
+
+      - label: "Photo description (alt text)"
+        name: "photoAlt"
+        widget: "string"
+        required: false
+        hint: >
+          Required if you add a photo. Describe what is actually in the picture —
+          this is what a screen reader announces, and the build will fail
+          without it.
+
+      - label: "Photo credit"
+        name: "photoCredit"
+        widget: "string"
+        required: false
+
+      - label: "The piece"
+        name: "body"
+        widget: "markdown"
+        hint: >
+          The first paragraph gets the drop cap. Use ## for section headings
+          and > for a pull quote.

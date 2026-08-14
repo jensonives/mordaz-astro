@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>MORDAZ logo sheet</title>
+<style>
+  @font-face{
+    font-family:'Archivo'; font-style:normal; font-weight:400 900;
+    font-stretch:62% 125%; font-display:block;
+    src:url('../public/assets/fonts/archivo-latin.woff2') format('woff2');
+  }
+  :root{ --cream:#F0E9DE; --red:#C4202A; --ink:#171516; --grey:#55504E; }
+  *{ box-sizing:border-box; margin:0; }
+  html,body{ width:1240px; height:1020px; background:var(--cream); }
+  body{
+    font-family:'Archivo','Helvetica Neue',Arial,sans-serif; color:var(--ink);
+    padding:44px 52px;
+  }
+  h1{
+    font-variation-settings:'wdth' 88,'wght' 800; font-size:26px;
+    text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px;
+  }
+  .sub{ font-size:14px; color:var(--grey); letter-spacing:.06em; margin-bottom:30px; }
+
+  .head{ display:grid; grid-template-columns:74px 190px 96px 60px 1fr;
+         gap:26px; align-items:center; padding-bottom:10px;
+         border-bottom:2px solid var(--ink); margin-bottom:8px; }
+  .head span{ font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+              font-variation-settings:'wdth' 90,'wght' 700; color:var(--grey); }
+
+  .row{ display:grid; grid-template-columns:74px 190px 96px 60px 1fr;
+        gap:26px; align-items:center; padding:14px 0;
+        border-bottom:1px solid rgba(23,21,22,.14); }
+
+  .no{ font-variation-settings:'wdth' 100,'wght' 900; font-size:34px; color:var(--red); }
+
+  /* every platform that matters crops to a circle — so preview circles */
+  img{ border-radius:50%; display:block; object-fit:cover; }
+  .lg{ width:150px; height:150px; }
+  .md{ width:56px;  height:56px; }
+  .sm{ width:32px;  height:32px; }
+
+  .name{ font-variation-settings:'wdth' 92,'wght' 800; font-size:19px;
+         text-transform:uppercase; letter-spacing:.02em; }
+  .note{ font-size:13.5px; color:var(--grey); line-height:1.4; margin-top:3px; max-width:560px; }
+</style>
+</head>
+<body>
+  <h1>MORDAZ &mdash; profile marks</h1>
+  <p class="sub">Shown circle-cropped, as Instagram, X and TikTok all display them. 32px is X timeline size.</p>
+
+  <div class="head">
+    <span></span><span>Circle</span><span>56px</span><span>32px</span><span></span>
+  </div>
+
+  <div class="row">
+    <span class="no">1</span>
+    <img class="lg" src="../public/assets/img/logo/mordaz-block.png">
+    <img class="md" src="../public/assets/img/logo/mordaz-block.png">
+    <img class="sm" src="../public/assets/img/logo/mordaz-block.png">
+    <div>
+      <div class="name">Block</div>
+      <div class="note">Archivo expanded, cream on red. The safest at any size &mdash; nothing to lose when it shrinks.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="no">2</span>
+    <img class="lg" src="../public/assets/img/logo/mordaz-strike.png">
+    <img class="md" src="../public/assets/img/logo/mordaz-strike.png">
+    <img class="sm" src="../public/assets/img/logo/mordaz-strike.png">
+    <div>
+      <div class="name">Strike</div>
+      <div class="note">The site&rsquo;s own move &mdash; the received view, struck through. Most meaning, most to lose when small.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="no">3</span>
+    <img class="lg" src="../public/assets/img/logo/mordaz-pair.png">
+    <img class="md" src="../public/assets/img/logo/mordaz-pair.png">
+    <img class="sm" src="../public/assets/img/logo/mordaz-pair.png">
+    <div>
+      <div class="name">Pair</div>
+      <div class="note">First letter and last, condensed. The black Z echoes the masthead.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="no">4</span>
+    <img class="lg" src="../public/assets/img/logo/mordaz-stack.png">
+    <img class="md" src="../public/assets/img/logo/mordaz-stack.png">
+    <img class="sm" src="../public/assets/img/logo/mordaz-stack.png">
+    <div>
+      <div class="name">Stack</div>
+      <div class="note">The whole name in two lines. Reads at profile-page size; struggles in a timeline.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="no">5</span>
+    <img class="lg" src="../public/assets/img/logo/mordaz-serif.png">
+    <img class="md" src="../public/assets/img/logo/mordaz-serif.png">
+    <img class="sm" src="../public/assets/img/logo/mordaz-serif.png">
+    <div>
+      <div class="name">Serif</div>
+      <div class="note">Newsreader italic on cream &mdash; the editorial voice, and the only light ground. Stands out against dark apps.</div>
+    </div>
+  </div>
+</body>
+</html>

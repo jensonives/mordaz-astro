@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>MORDAZ logo</title>
+<style>
+  @font-face{
+    font-family:'Archivo'; font-style:normal; font-weight:400 900;
+    font-stretch:62% 125%; font-display:block;
+    src:url('../public/assets/fonts/archivo-latin.woff2') format('woff2');
+  }
+  @font-face{
+    font-family:'Newsreader'; font-style:italic; font-weight:400 500;
+    font-display:block;
+    src:url('../public/assets/fonts/newsreader-it-latin.woff2') format('woff2');
+  }
+
+  :root{ --cream:#F0E9DE; --red:#C4202A; --ink:#171516; }
+  *{ box-sizing:border-box; margin:0; }
+  html,body{ width:1000px; height:1000px; overflow:hidden; }
+
+  .card{
+    position:relative; width:1000px; height:1000px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
+    overflow:hidden;
+  }
+
+  /* Everything sits inside the inscribed circle, because every platform that
+     matters crops a profile picture to a circle. */
+  .glyph{ line-height:1; letter-spacing:-.02em; display:block; }
+
+  /* ── 1 · BLOCK ─────────────────────────────────────────────── */
+  .v-block{ background:var(--red); }
+  .v-block .glyph{
+    color:var(--cream); font-variation-settings:'wdth' 125,'wght' 900;
+    font-size:660px; margin-top:-24px;
+  }
+
+  /* ── 2 · STRIKE ────────────────────────────────────────────────
+     The site's own move: the mark, with the red band struck through it. */
+  .v-strike{ background:var(--ink); }
+  .v-strike .stack{ position:relative; width:1000px; height:1000px; }
+  .v-strike .layer{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  }
+  .v-strike .glyph{
+    color:var(--cream); font-variation-settings:'wdth' 125,'wght' 900;
+    font-size:640px; margin-top:-20px;
+  }
+  .v-strike .band{
+    position:absolute; left:0; right:0; top:432px; height:150px; background:var(--red);
+  }
+  .v-strike .cut{ clip-path:inset(432px 0 418px 0); }
+  .v-strike .cut .glyph{ color:var(--ink); }
+
+  /* ── 3 · PAIR ──────────────────────────────────────────────────
+     First letter and last — the Z is the black note, as on the masthead. */
+  .v-pair{ background:var(--red); }
+  .v-pair .glyph{
+    font-variation-settings:'wdth' 74,'wght' 900; font-size:600px;
+    margin-top:-20px; letter-spacing:-.05em;
+  }
+  .v-pair .m{ color:var(--cream); }
+  .v-pair .z{ color:var(--ink); }
+
+  /* ── 4 · STACK ─────────────────────────────────────────────────
+     The whole name, split so it still reads at medium sizes. */
+  .v-stack{ background:var(--ink); flex-direction:column; gap:0; }
+  .v-stack .glyph{
+    color:var(--cream); font-variation-settings:'wdth' 68,'wght' 800;
+    font-size:300px; letter-spacing:.01em;
+  }
+  .v-stack .rule{ width:520px; height:16px; background:var(--red); margin:26px 0; }
+
+  /* ── 5 · SERIF ─────────────────────────────────────────────────
+     The editorial voice rather than the poster voice. Cream ground, so it
+     sits differently against a dark app background. */
+  .v-serif{ background:var(--cream); }
+  .v-serif .stack{ position:relative; width:1000px; height:1000px; }
+  .v-serif .layer{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  }
+  .v-serif .glyph{
+    font-family:'Newsreader',Georgia,serif; font-style:italic; font-weight:500;
+    color:var(--red); font-size:700px; margin-top:-30px;
+  }
+  .v-serif .band{
+    position:absolute; left:0; right:0; top:452px; height:112px; background:var(--ink);
+  }
+  .v-serif .cut{ clip-path:inset(452px 0 436px 0); }
+  .v-serif .cut .glyph{ color:var(--cream); }
+</style>
+</head>
+<body>
+<div class="card" id="card"></div>
+
+<script>
+  var v = (location.hash.slice(1) || 'block');
+  var card = document.getElementById('card');
+  card.className = 'card v-' + v;
+
+  var html = {
+    block:  '<span class="glyph">M</span>',
+    strike: '<div class="stack">' +
+              '<div class="layer"><span class="glyph">M</span></div>' +
+              '<div class="band"></div>' +
+              '<div class="layer cut"><span class="glyph">M</span></div>' +
+            '</div>',
+    pair:   '<span class="glyph"><span class="m">M</span><span class="z">Z</span></span>',
+    stack:  '<span class="glyph">MOR</span><span class="rule"></span><span class="glyph">DAZ</span>',
+    serif:  '<div class="stack">' +
+              '<div class="layer"><span class="glyph">M</span></div>' +
+              '<div class="band"></div>' +
+              '<div class="layer cut"><span class="glyph">M</span></div>' +
+            '</div>'
+  };
+
+  card.innerHTML = html[v] || html.block;
+</script>
+</body>
+</html>
