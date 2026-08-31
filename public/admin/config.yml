@@ -8,8 +8,7 @@
 
 backend:
   name: github
-  # ── SET THIS once the repo exists: your GitHub username / repo name ──
-  repo: your-github-username/mordaz
+  repo: jensonives/mordaz-astro
   branch: main
   # Netlify's own OAuth provider handles the login. No Netlify Identity —
   # that is being sunset and cannot be enabled on new sites.
