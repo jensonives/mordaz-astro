@@ -6,6 +6,7 @@ standfirst: "A consultation that cannot change the outcome is not a consultation
 beat: politics
 date: 2026-06-18
 minutes: 7
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>OG card</title>
+<style>
+  /* Self-hosted faces, same files the site uses, so the card is set in the
+     real typefaces rather than a substitute. Paths are relative to /tools. */
+  @font-face{
+    font-family:'Archivo'; font-style:normal; font-weight:400 900;
+    font-stretch:62% 125%; font-display:block;
+    src:url('../public/assets/fonts/archivo-latin.woff2') format('woff2');
+  }
+  @font-face{
+    font-family:'Newsreader'; font-style:italic; font-weight:400 500;
+    font-display:block;
+    src:url('../public/assets/fonts/newsreader-it-latin.woff2') format('woff2');
+  }
+
+  *{ box-sizing:border-box; margin:0; }
+  /* dimensions are set from the payload — see the script at the bottom */
+  html,body{ overflow:hidden; }
+
+  body{
+    position:relative;
+    background:#171516;
+    color:#F0E9DE;
+    font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
+    padding:64px 72px;
+    display:flex; flex-direction:column; justify-content:space-between;
+
+    /* the bite, bottom-right — same motif as the site */
+    -webkit-mask-image:radial-gradient(circle 92px at 100% 100%, transparent 99%, #000 100%);
+            mask-image:radial-gradient(circle 92px at 100% 100%, transparent 99%, #000 100%);
+  }
+
+  .top{ display:flex; align-items:baseline; gap:22px; }
+  .mark{
+    font-variation-settings:'wdth' 125,'wght' 900;
+    font-size:38px; letter-spacing:-.01em; line-height:1;
+  }
+  .gloss{
+    font-size:15px; letter-spacing:.18em; text-transform:uppercase;
+    font-variation-settings:'wdth' 90,'wght' 600; color:rgba(240,233,222,.72);
+  }
+
+  .mid{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:26px; }
+
+  .kicker{ display:flex; align-items:baseline; gap:16px; max-width:1000px; }
+  .kicker__label{
+    flex:none; font-size:17px; letter-spacing:.18em; text-transform:uppercase;
+    font-variation-settings:'wdth' 92,'wght' 800; color:#E8505A;
+  }
+  .kicker__text{
+    font-family:'Newsreader',Georgia,serif; font-style:italic;
+    font-size:29px; line-height:1.25; color:#F0E9DE;
+  }
+
+  .title{
+    font-variation-settings:'wdth' 74,'wght' 800;
+    font-size:78px; line-height:.94; letter-spacing:-.015em;
+    text-transform:uppercase; max-width:1010px;
+  }
+  /* long headlines step down rather than overflowing the card */
+  .title.is-long{ font-size:62px; }
+  .title.is-vlong{ font-size:52px; }
+
+  .foot{ display:flex; align-items:center; gap:20px; }
+  .bar{ flex:1; height:4px; background:#C4202A; }
+  /* flex:none or the rule squeezes it and the URL gets clipped */
+  .meta{
+    flex:none; white-space:nowrap;
+    font-size:17px; letter-spacing:.18em; text-transform:uppercase;
+    font-variation-settings:'wdth' 90,'wght' 700; color:rgba(240,233,222,.8);
+  }
+
+  /* ── social formats ──────────────────────────────────────────────
+     Instagram and TikTok are portrait-first; a landscape card gets
+     letterboxed into a strip nobody reads. Same design, retuned. */
+  body.f-square,body.f-vertical{ padding:80px 76px; }
+  body.f-square   .mark,   body.f-vertical .mark{ font-size:46px; }
+  body.f-square   .title{ font-size:104px; }
+  body.f-vertical .title{ font-size:118px; }
+  body.f-square   .title.is-long,  body.f-vertical .title.is-long{ font-size:88px; }
+  body.f-square   .title.is-vlong, body.f-vertical .title.is-vlong{ font-size:72px; }
+  body.f-square   .kicker__text,   body.f-vertical .kicker__text{ font-size:38px; }
+  body.f-square   .kicker__label,  body.f-vertical .kicker__label{ font-size:22px; }
+  body.f-square   .gloss,  body.f-vertical .gloss{ font-size:19px; }
+  body.f-square   .meta,   body.f-vertical .meta{ font-size:22px; }
+  body.f-square   .mid,    body.f-vertical .mid{ gap:40px; }
+  /* Stories and TikTok overlay their own UI top and bottom, so the type stays
+     in the middle third where nothing covers it. */
+  body.f-vertical .mid{ flex:1; justify-content:center; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <span class="mark">MORDAZ</span>
+    <span class="gloss">mor&middot;daz &middot; adj. biting</span>
+  </div>
+
+  <div class="mid">
+    <p class="kicker" id="kicker">
+      <span class="kicker__label">They say</span>
+      <span class="kicker__text">&ldquo;<span id="kicker-text"></span>&rdquo;</span>
+    </p>
+    <h1 class="title" id="title"></h1>
+  </div>
+
+  <!-- meta first, rule second: the bite eats the bottom-right corner, and a
+       cropped rule reads as deliberate where cropped words read as a bug -->
+  <div class="foot">
+    <span class="meta" id="meta"></span>
+    <span class="bar"></span>
+  </div>
+
+<script>
+  // Values are injected by tools/New-OgImage.ps1 as a JSON blob on the URL hash,
+  // which keeps the template a single reusable file.
+  var d = {};
+  try { d = JSON.parse(decodeURIComponent(location.hash.slice(1)) || '{}'); } catch (e) {}
+
+  // size the canvas from the payload, and pick the format's type scale
+  var W = d.w || 1200, H = d.h || 630;
+  document.documentElement.style.width  = document.body.style.width  = W + 'px';
+  document.documentElement.style.height = document.body.style.height = H + 'px';
+
+  var fmt = (H > W) ? 'f-vertical' : (H === W ? 'f-square' : 'f-og');
+  document.body.classList.add(fmt);
+  // the bite scales with the card
+  var r = Math.round(Math.min(W, H) * 0.11);
+  var mask = 'radial-gradient(circle ' + r + 'px at 100% 100%, transparent 99%, #000 100%)';
+  document.body.style.webkitMaskImage = mask;
+  document.body.style.maskImage = mask;
+
+  var title = document.getElementById('title');
+  title.textContent = d.title || 'MORDAZ';
+  if (title.textContent.length > 52) title.classList.add('is-vlong');
+  else if (title.textContent.length > 34) title.classList.add('is-long');
+
+  document.getElementById('meta').textContent = d.meta || '';
+
+  if (d.kicker) {
+    document.getElementById('kicker-text').textContent = d.kicker;
+  } else {
+    document.getElementById('kicker').remove();
+  }
+</script>
+</body>
+</html>

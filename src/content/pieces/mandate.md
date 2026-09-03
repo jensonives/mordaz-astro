@@ -6,6 +6,7 @@ standfirst: "Governments keep mistaking the size of a win for permission to do t
 beat: politics
 date: 2026-07-28
 minutes: 9
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**

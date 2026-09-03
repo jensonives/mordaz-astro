@@ -6,6 +6,7 @@ standfirst: "Nobody moves a minister who is doing the job well. The reshuffle is
 beat: politics
 date: 2026-07-09
 minutes: 5
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**

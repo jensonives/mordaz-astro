@@ -90,7 +90,7 @@ const jsonLd = {
           <span class="rule__meta">{cards.length} {cards.length === 1 ? 'piece' : 'pieces'}</span>
         </div>
 
-        <div class="cards">
+        <div class="cards" style={`--n:${cards.length}`}>
           {cards.map((p) => (
             <article class="card" data-reveal>
               <a class="card__link" href={`/${p.id}/`}>

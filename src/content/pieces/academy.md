@@ -6,6 +6,7 @@ standfirst: "The money flows from the clubs who can least afford it toward the o
 beat: sport
 date: 2026-06-24
 minutes: 12
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**

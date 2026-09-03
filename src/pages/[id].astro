@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Plate from '../components/Plate.astro';
@@ -18,8 +20,15 @@ const { Content } = await render(piece);
 const description = `They say ${d.theySay}. In fact ${d.inFact}. ${d.standfirst}`;
 
 /* A per-piece Open Graph card if one has been generated, otherwise the
-   site-wide one — a missing image is worse than a generic image. */
-const ogImage = `/assets/img/og-${piece.id}.png`;
+   site-wide one — a missing image is worse than a generic image.
+
+   This has to be checked, not assumed. Pointing og:image at a file that is
+   not there makes every share of the piece render as an empty grey box, and
+   nothing on the page tells you it has happened. Run `npm run og` to fill
+   the gaps. */
+const card = `/assets/img/og-${piece.id}.png`;
+const cardOnDisk = fileURLToPath(new URL(`../../public${card}`, import.meta.url));
+const ogImage = existsSync(cardOnDisk) ? card : '/assets/img/og.png';
 
 const jsonLd = {
   '@context': 'https://schema.org',

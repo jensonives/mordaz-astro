@@ -6,6 +6,7 @@ standfirst: "What used to be a football question about injuries and fixtures is 
 beat: sport
 date: 2026-07-16
 minutes: 8
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**

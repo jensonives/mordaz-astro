@@ -6,6 +6,7 @@ standfirst: "The clubs complaining loudest about the deadline are the ones who w
 beat: sport
 date: 2026-08-01
 minutes: 7
+draft: true
 ---
 
 **This is placeholder text — replace it with the piece.**
