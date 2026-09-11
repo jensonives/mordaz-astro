@@ -27,8 +27,8 @@ publish_mode: simple
 media_folder: "public/assets/img/uploads"
 public_folder: "/assets/img/uploads"
 
-site_url: https://mordaz.example
-display_url: https://mordaz.example
+site_url: https://wondrous-bunny-253dce.netlify.app
+display_url: https://wondrous-bunny-253dce.netlify.app
 
 collections:
   - name: "pieces"
