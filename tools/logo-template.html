@@ -17,17 +17,24 @@
 
   :root{ --cream:#F0E9DE; --red:#C4202A; --ink:#171516; }
   *{ box-sizing:border-box; margin:0; }
-  html,body{ width:1000px; height:1000px; overflow:hidden; }
+  html,body{ overflow:hidden; }
 
+  /* The designs below are drawn at a fixed base size and then scaled to
+     whatever the caller asked for. Scaling the whole thing keeps every
+     proportion — the strike band, the letter-spacing, the rule weight —
+     identical at 32px and at 1000px, which re-tuning each size by hand
+     does not. */
+  .stagewrap{ position:relative; overflow:hidden; }
   .card{
-    position:relative; width:1000px; height:1000px;
+    position:relative;
     display:flex; align-items:center; justify-content:center;
     font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
     overflow:hidden;
+    transform-origin:0 0;
   }
+  .card.sq{ width:1000px; height:1000px; }
+  .card.bn{ width:1500px; height:500px; }
 
-  /* Everything sits inside the inscribed circle, because every platform that
-     matters crops a profile picture to a circle. */
   .glyph{ line-height:1; letter-spacing:-.02em; display:block; }
 
   /* ── 1 · BLOCK ─────────────────────────────────────────────── */
@@ -37,8 +44,7 @@
     font-size:660px; margin-top:-24px;
   }
 
-  /* ── 2 · STRIKE ────────────────────────────────────────────────
-     The site's own move: the mark, with the red band struck through it. */
+  /* ── 2 · STRIKE ────────────────────────────────────────────── */
   .v-strike{ background:var(--ink); }
   .v-strike .stack{ position:relative; width:1000px; height:1000px; }
   .v-strike .layer{
@@ -64,8 +70,7 @@
   .v-pair .m{ color:var(--cream); }
   .v-pair .z{ color:var(--ink); }
 
-  /* ── 4 · STACK ─────────────────────────────────────────────────
-     The whole name, split so it still reads at medium sizes. */
+  /* ── 4 · STACK ─────────────────────────────────────────────── */
   .v-stack{ background:var(--ink); flex-direction:column; gap:0; }
   .v-stack .glyph{
     color:var(--cream); font-variation-settings:'wdth' 68,'wght' 800;
@@ -73,9 +78,7 @@
   }
   .v-stack .rule{ width:520px; height:16px; background:var(--red); margin:26px 0; }
 
-  /* ── 5 · SERIF ─────────────────────────────────────────────────
-     The editorial voice rather than the poster voice. Cream ground, so it
-     sits differently against a dark app background. */
+  /* ── 5 · SERIF ─────────────────────────────────────────────── */
   .v-serif{ background:var(--cream); }
   .v-serif .stack{ position:relative; width:1000px; height:1000px; }
   .v-serif .layer{
@@ -90,15 +93,47 @@
   }
   .v-serif .cut{ clip-path:inset(452px 0 436px 0); }
   .v-serif .cut .glyph{ color:var(--cream); }
+
+  /* ── BANNER ────────────────────────────────────────────────────
+     1500×500, for an X header. The type sits dead centre rather than
+     left: X laps the circular avatar over the bottom-left corner and
+     crops the sides hard on narrow screens, so the middle is the only
+     region guaranteed to survive on every device. */
+  .v-banner{ background:var(--red); flex-direction:column; gap:34px; }
+  .v-banner .word{
+    font-variation-settings:'wdth' 125,'wght' 900;
+    font-size:165px; line-height:1; letter-spacing:-.015em;
+  }
+  .v-banner .word .m{ color:var(--cream); }
+  .v-banner .word .z{ color:var(--ink); }
+  .v-banner .gloss{
+    color:var(--cream); opacity:.82;
+    font-variation-settings:'wdth' 92,'wght' 700;
+    font-size:30px; letter-spacing:.34em; text-transform:uppercase;
+  }
 </style>
 </head>
 <body>
-<div class="card" id="card"></div>
+<div class="stagewrap" id="stage"><div class="card" id="card"></div></div>
 
 <script>
-  var v = (location.hash.slice(1) || 'block');
+  /* Two payload shapes, because tools/New-Logo.ps1 still calls the old one:
+       #pair                         -> that variant at its base size
+       #{"v":"pair","w":180,"h":180} -> that variant scaled to fit w×h     */
+  var hash = decodeURIComponent(location.hash.slice(1)) || 'block';
+  var d;
+  try { d = hash.charAt(0) === '{' ? JSON.parse(hash) : { v: hash }; }
+  catch (e) { d = { v: 'block' }; }
+
+  var v = d.v || 'block';
+  var banner = v === 'banner';
+  var baseW = banner ? 1500 : 1000;
+  var baseH = banner ? 500 : 1000;
+  var W = d.w || baseW;
+  var H = d.h || baseH;
+
   var card = document.getElementById('card');
-  card.className = 'card v-' + v;
+  card.className = 'card ' + (banner ? 'bn' : 'sq') + ' v-' + v;
 
   var html = {
     block:  '<span class="glyph">M</span>',
@@ -113,10 +148,22 @@
               '<div class="layer"><span class="glyph">M</span></div>' +
               '<div class="band"></div>' +
               '<div class="layer cut"><span class="glyph">M</span></div>' +
-            '</div>'
+            '</div>',
+    banner: '<span class="word"><span class="m">MORDA</span><span class="z">Z</span></span>' +
+            '<span class="gloss">biting &middot; scathing</span>'
   };
-
   card.innerHTML = html[v] || html.block;
+
+  /* Scale to the requested canvas and size the page to match exactly, so the
+     screenshot has no letterboxing and no scrollbars. */
+  var scale = Math.min(W / baseW, H / baseH);
+  card.style.transform = 'scale(' + scale + ')';
+
+  var stage = document.getElementById('stage');
+  stage.style.width = W + 'px';
+  stage.style.height = H + 'px';
+  document.documentElement.style.width = document.body.style.width = W + 'px';
+  document.documentElement.style.height = document.body.style.height = H + 'px';
 </script>
 </body>
 </html>

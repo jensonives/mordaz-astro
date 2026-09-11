@@ -12,7 +12,8 @@
     "astro": "astro",
     "cms": "decap-server",
     "og": "node tools/og.mjs",
-    "domain": "node tools/domain.mjs"
+    "domain": "node tools/domain.mjs",
+    "logo": "node tools/logo.mjs"
   },
   "dependencies": {
     "astro": "^7.2.0"
