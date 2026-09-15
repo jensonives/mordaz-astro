@@ -24,7 +24,7 @@ export const site = {
    */
   live: false,
 
-  email: 'hello@example.com',
+  email: 'hello@mordaz.co.uk',
 
   tagline: 'Opinion on sport, politics and economics',
   description:
