@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   /* Must match `url` in src/site.ts — Astro uses it for the sitemap and for
      resolving absolute URLs at build time. */
-  site: 'https://mordaz.example',
+  site: 'https://mordaz.co.uk',
 
   /* Pieces live at /puzzle/ rather than /puzzle.html, and the trailing slash
      is enforced so canonical URLs never end up duplicated in search results. */

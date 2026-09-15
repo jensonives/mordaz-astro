@@ -10,7 +10,7 @@ export const site = {
   author: 'Jenson Ives',
 
   /** No trailing slash. Also set `site:` in astro.config.mjs to match. */
-  url: 'https://mordaz.example',
+  url: 'https://mordaz.co.uk',
 
   /**
    * FALSE until the real writing is up and the real domain is pointed.
