@@ -1030,10 +1030,10 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
   .bar__gloss,.bar__nav{ display:none; }
   .bar__burger{ display:block; }
   .hero{ min-height:0; }
-  /* Stacked, the panel's bitten corner sits directly above the lead plate.
-     This gap keeps a little cream between the red block and the dark plate so
-     the cut reads as a cut rather than a sliver caught between two blocks. */
-  .lead{ padding-top:1.75rem; }
+  /* The 1.75rem of cream that used to sit here existed to give the panel's
+     bitten corner somewhere to read against. With straight edges it is just
+     a strip between two colour blocks that should meet, so the plate now
+     butts straight up under the red panel. */
   .lead__body{ margin-top:-2.5rem; }
   .plate--wide{ aspect-ratio:2/1; }
 }

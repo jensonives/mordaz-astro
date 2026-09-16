@@ -35,7 +35,19 @@ export const site = {
   partOfSpeech: 'adj.',
   gloss: 'biting, scathing — of criticism, and of the person writing it',
 
+  /** One handle everywhere. Drives the footer links, the X card byline and
+      the sameAs list that tells Google these accounts are the same outfit. */
+  handle: '@mordazuk',
+  social: {
+    X: 'https://x.com/mordazuk',
+    Instagram: 'https://www.instagram.com/mordazuk/',
+    TikTok: 'https://www.tiktok.com/@mordazuk',
+  },
+
 } as const;
+
+/** For structured data: the profiles that belong to this publication. */
+export const sameAs = Object.values(site.social);
 
 export const beats = ['sport', 'politics', 'economics'] as const;
 export type Beat = (typeof beats)[number];

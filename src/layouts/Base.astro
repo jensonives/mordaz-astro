@@ -51,6 +51,8 @@ const ogImageUrl = `${site.url}${ogImage}`;
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:site" content={site.handle} />
+<meta name="twitter:creator" content={site.handle} />
 
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-latin.woff2" crossorigin />
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/newsreader-latin.woff2" crossorigin />
@@ -109,6 +111,12 @@ const ogImageUrl = `${site.url}${ogImage}`;
       <div>
         <h3>More</h3>
         <a href="/#archive">Archive</a><a href="/#about">About</a><a href={`mailto:${site.email}`}>Contact</a>
+      </div>
+      <div>
+        <h3>Elsewhere</h3>
+        {Object.entries(site.social).map(([label, href]) => (
+          <a href={href} rel="me noopener" target="_blank">{label}</a>
+        ))}
       </div>
     </div>
     <p class="foot__fine">

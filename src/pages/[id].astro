@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Plate from '../components/Plate.astro';
-import { site, beatLabel, longDate, isoDate } from '../site';
+import { site, sameAs, beatLabel, longDate, isoDate } from '../site';
 
 /* One route for every piece, now and forever. Adding an article used to mean
    copying a 300-line file and making 31 edits. */
@@ -39,8 +39,8 @@ const jsonLd = {
   dateModified: isoDate(d.date),
   inLanguage: 'en-GB',
   articleSection: beatLabel(d.beat),
-  author: { '@type': 'Person', name: site.author },
-  publisher: { '@type': 'Person', name: site.author },
+  author: { '@type': 'Person', name: site.author, sameAs },
+  publisher: { '@type': 'Person', name: site.author, sameAs },
   mainEntityOfPage: { '@type': 'WebPage', '@id': `${site.url}/${piece.id}/` },
   isPartOf: { '@type': 'Blog', name: site.name, url: `${site.url}/` },
 };

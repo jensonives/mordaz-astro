@@ -160,10 +160,24 @@
        rather than as an intentional crop. */
     var x     = W * (0.05 + rand() * 0.04);
     var fill  = 0.96 + rand() * 0.04;
-    var size  = PROBE * ((W - 2 * x) * fill) / widest;
+
+    /* Width alone is not enough. Three lines of display type in a frame this
+       short overran the bottom edge and sliced the last line through its
+       middle, which reads as a rendering fault rather than as a crop. Take
+       whichever of the two constraints binds first. */
+    var byWidth  = PROBE * ((W - 2 * x) * fill) / widest;
+    var byHeight = (H * 0.92) / ((lines.length - 1) * LH + 1);
+    var size     = Math.min(byWidth, byHeight);
 
     var block = (lines.length - 1) * LH * size;
     var first = (H - block) / 2 + size * 0.30 + (rand() - 0.5) * H * 0.06;
+
+    /* The jitter above is what stops every plate sitting at exactly the same
+       height. Clamp it so it can never push the type out of the frame: cap
+       height above the first baseline, descender below the last. */
+    var minFirst = H * 0.04 + size * 0.75;
+    var maxFirst = H * 0.96 - block - size * 0.22;
+    if (maxFirst > minFirst) first = Math.max(minFirst, Math.min(maxFirst, first));
 
     text.setAttribute('font-size', size.toFixed(2));
     text.setAttribute('y', first.toFixed(2));

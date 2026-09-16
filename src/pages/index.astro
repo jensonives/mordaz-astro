@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Plate from '../components/Plate.astro';
-import { site, beatLabel, shortDate, isoDate } from '../site';
+import { site, sameAs, beatLabel, shortDate, isoDate } from '../site';
 
 /* Everything below is derived. Add a Markdown file and the lead, the cards and
    the archive all update themselves — there is nothing to keep in step. */
@@ -19,8 +19,8 @@ const jsonLd = {
   url: `${site.url}/`,
   inLanguage: 'en-GB',
   description: site.description,
-  author: { '@type': 'Person', name: site.author },
-  publisher: { '@type': 'Person', name: site.author },
+  author: { '@type': 'Person', name: site.author, sameAs },
+  publisher: { '@type': 'Person', name: site.author, sameAs },
 };
 ---
 <Base
