@@ -42,8 +42,8 @@ if (!edge) {
   process.exit(1);
 }
 
-function shoot({ v, w, h }, outPath) {
-  const hash = encodeURIComponent(JSON.stringify({ v, w, h }));
+function shoot({ v, w, h, sub }, outPath) {
+  const hash = encodeURIComponent(JSON.stringify({ v, w, h, sub }));
   const target = `${pathToFileURL(template).href}#${hash}`;
   const profile = join(tmpdir(), `mordaz-logo-${Math.random().toString(36).slice(2, 10)}`);
 
@@ -83,6 +83,7 @@ if (!marksOnly) {
     { v: MARK, w: 512, h: 512, out: join(publicDir, 'icon-512.png') },
     /* X / Twitter header. */
     { v: 'banner', w: 1500, h: 500, out: join(logoDir, 'x-header.png') },
+    { v: 'banner', w: 1500, h: 500, sub: 'mordaz.co.uk', out: join(logoDir, 'x-header-url.png') },
   );
 }
 
