@@ -10,11 +10,11 @@
    article, and what the plates render. The archive is readable because
    each row carries its own rebuttal rather than another headline.
 
-   THE SIGNATURE — the bite
-   One geometry, used structurally rather than decoratively: the cream
-   ground eats a circle out of every red or near-black block where it meets
-   the page. Hero panel, article header, About, responses, plates, pull
-   quotes — the same radius, the same idea. See §4.
+   THE SIGNATURE — the block
+   Flat rectangles of one colour, butted straight against each other. Hero
+   panel, article header, About, responses, plates, pull quotes: no rounding,
+   no cut corners, no seam drawn over the join. Where two blocks meet, the
+   change of colour is the line.
 
    COLOUR
    Ground:    cream. The page is paper; everything sits on it.
@@ -124,8 +124,6 @@
   --rule-inv-s: rgba(240,233,222,.15);
   --type-inv:   rgba(240,233,222,.66);   /* safe on near-black only (7:1) */
 
-  /* the bite — one radius, overridden per block in §4 */
-  --bite:       2.4rem;
 
   /* type */
   --ff-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
@@ -280,40 +278,17 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
    gradient radius.
    ═══════════════════════════════════════════════════════════════════ */
 
-.bite-tr,.bite-tl,.bite-br,.bite-bl{
-  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-  -webkit-mask-size:100% 100%;   mask-size:100% 100%;
-}
-.bite-tr{
-  -webkit-mask-image:radial-gradient(circle var(--bite) at 100% 0, transparent 99%, #000 100%);
-          mask-image:radial-gradient(circle var(--bite) at 100% 0, transparent 99%, #000 100%);
-}
-.bite-tl{
-  -webkit-mask-image:radial-gradient(circle var(--bite) at 0 0, transparent 99%, #000 100%);
-          mask-image:radial-gradient(circle var(--bite) at 0 0, transparent 99%, #000 100%);
-}
-.bite-br{
-  -webkit-mask-image:radial-gradient(circle var(--bite) at 100% 100%, transparent 99%, #000 100%);
-          mask-image:radial-gradient(circle var(--bite) at 100% 100%, transparent 99%, #000 100%);
-}
-.bite-bl{
-  -webkit-mask-image:radial-gradient(circle var(--bite) at 0 100%, transparent 99%, #000 100%);
-          mask-image:radial-gradient(circle var(--bite) at 0 100%, transparent 99%, #000 100%);
-}
+/* The blocks used to carry a circular notch masked out of one corner. At a
+   glance the cut-out corners read as jigsaw tabs rather than as a motif —
+   the panels looked interlocked instead of stacked, and the effect fought
+   the poster geometry everywhere it appeared. The blocks now meet on plain
+   straight edges: the colour change alone marks the join, which is what the
+   rest of the layout already relies on. */
 
-/* per-block radius, scaled to the block */
-.ahead,.about,.resp{ --bite:clamp(2.4rem,5vw,4rem); }
-/* smaller, because the title column is narrow — the same radius would eat it */
-.hero__mark{ --bite:clamp(1.6rem,3vw,2.6rem); }
-.card__fig{ --bite:clamp(1.5rem,3.5vw,2.2rem); }
-.plate--wide{ --bite:clamp(2rem,4vw,3rem); }
-.pull{ --bite:1.8rem; }
-
-/* THE BITE at marker scale — a square with a crescent taken out of it */
+/* The marker at meta scale — a plain square, the smallest unit of the
+   same block language. */
 .bite-mark{
-  flex:none; width:.62em; height:.62em; background:currentColor;
-  -webkit-mask-image:radial-gradient(circle at 100% 0, transparent 42%, #000 43%);
-          mask-image:radial-gradient(circle at 100% 0, transparent 42%, #000 43%);
+  flex:none; width:.58em; height:.58em; background:currentColor;
 }
 
 
@@ -455,7 +430,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 
 .hero{
   display:grid; grid-template-columns:1fr; align-items:stretch;
-  min-height:calc(100svh - var(--bar-h));
 }
 /* grid items default to min-width:auto, which lets the oversized mark push
    its own track wider than the viewport. Pin it to 0 and the tracks hold. */
@@ -463,12 +437,24 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 /* The red panel is a title column, not half the page. Capped in rem as well
    as percent so it stays a consistent, restrained width instead of growing
    with the viewport — the feature piece takes the rest. */
-@media (min-width:60em){ .hero{ grid-template-columns:clamp(16rem, 36%, 28rem) 1fr; } }
+@media (min-width:60em){
+  .hero{
+    grid-template-columns:clamp(16rem, 36%, 28rem) 1fr;
+    /* Full height only where the hero is two columns, so the mark and the
+       feature piece share the first screen. Stacked on a phone the same rule
+       gave the red panel a whole screen to itself and pushed every word of
+       the writing below the fold. */
+    min-height:calc(100svh - var(--bar-h));
+  }
+}
 
 /* LEFT — the mark */
 .hero__mark{
   position:relative; background:var(--red); color:var(--cream);
-  padding:clamp(2.2rem,5vw,4rem) var(--gut) clamp(3.2rem,6vw,4rem);
+  /* Tighter top and bottom than before: on a phone this panel is the whole
+     first screen, and every rem here is a rem of the feature piece the
+     reader cannot see. */
+  padding:clamp(1.5rem,4vw,4rem) var(--gut) clamp(1.8rem,4.5vw,4rem);
   display:flex; flex-direction:column; justify-content:center;
   container-type:inline-size;          /* the mark sizes against this */
   animation:panelIn var(--t-slow) var(--ease) both;
@@ -512,13 +498,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 /* pretty, not balance — the column is narrow enough that the definition was
    dropping a single word onto its own last line */
 .mark__def{ font-size:.9rem; text-wrap:pretty; }
-.mark__blurb{ text-wrap:pretty; }
-
-.mark__blurb{
-  max-width:30rem; margin-top:1.5rem;
-  font-family:var(--ff-read); font-size:clamp(1.02rem,1.6vw,1.22rem); line-height:1.5;
-  color:var(--cream); animation:up .7s var(--ease) .66s both;
-}
 
 .mark__by{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.9rem; animation:up .7s var(--ease) .74s both; }
 .beat{
@@ -542,13 +521,9 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .mark__sig a{ color:var(--cream); border-bottom:1px solid var(--cream); padding-bottom:1px; }
 .mark__sig a:hover{ color:var(--ink); border-color:var(--ink); }
 
-/* The hero panel takes its bite at a CORNER, from the .bite-br utility in §4,
-   exactly like the article header and every other block.
-   It used to be a full circle straddling the middle of the panel's edge, and
-   sitting mid-edge rather than at a corner it read as a jigsaw tab — which was
-   both louder than everything around it and unfortunate next to an entry
-   called "puzzle". The corner cut says the same thing quietly, and it means
-   there is now one bite geometry on the site rather than two.
+/* The panel is a plain rectangle. Its edge against the lead entry is the
+   only division needed — red meeting cream is already a hard line, and it
+   runs the full height of the hero, which a notched corner interrupted.
    Its arrival is carried by the panelIn wipe, so nothing is lost on load. */
 
 /* RIGHT — the lead entry */
@@ -875,8 +850,7 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
   content:''; display:block; width:2.4rem; height:3px; background:var(--red); margin-bottom:.7rem;
 }
 
-/* pull quote — the near-black note inside the reading column.
-   Its bite comes from the .bite-tr utility in §4, same as every other. */
+/* pull quote — the near-black note inside the reading column. */
 .pull{
   position:relative; margin-block:2.2em; padding:1.6rem 1.8rem;
   background:var(--ink); color:var(--cream);

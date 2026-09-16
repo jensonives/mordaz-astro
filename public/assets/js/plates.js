@@ -150,14 +150,20 @@
     });
     if (!widest) widest = PROBE * 0.52 * (lines[0] || '').length;
 
-    /* Barely any bleed: the claim has to be READABLE — the plate only works
-       if you can see what is being struck out. */
-    var fill = 0.92 + rand() * 0.12;
-    var size = PROBE * (W * fill) / widest;
+    /* The claim has to be READABLE — the plate only works if you can see what
+       is being struck out.
+
+       The measure is what is left after the left inset, counted on both sides.
+       Sizing to the full frame width and only then indenting by `x` pushed the
+       longest line up to 13% past the right edge — `fill` could reach 1.04 on
+       its own — which cut the last word mid-letter and read as a broken image
+       rather than as an intentional crop. */
+    var x     = W * (0.05 + rand() * 0.04);
+    var fill  = 0.96 + rand() * 0.04;
+    var size  = PROBE * ((W - 2 * x) * fill) / widest;
 
     var block = (lines.length - 1) * LH * size;
     var first = (H - block) / 2 + size * 0.30 + (rand() - 0.5) * H * 0.06;
-    var x     = W * (0.05 + rand() * 0.04);
 
     text.setAttribute('font-size', size.toFixed(2));
     text.setAttribute('y', first.toFixed(2));

@@ -31,7 +31,7 @@ const jsonLd = {
 >
 
   <section class="hero" aria-labelledby="mark">
-    <div class="hero__mark bite-br">
+    <div class="hero__mark">
       <h1 class="mark" id="mark">
         <span class="mark__word" aria-label={site.name}>
           {site.name.split('').map((ch) => <span class="mark__l">{ch}</span>)}
@@ -43,8 +43,6 @@ const jsonLd = {
         <span class="mark__pos">{site.partOfSpeech}</span>
         <span class="mark__def">{site.gloss}</span>
       </p>
-
-      <p class="mark__blurb">{site.blurb}</p>
 
       <p class="mark__by">
         <span class="beat"><b>Sport</b></span>
@@ -152,7 +150,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <section class="band about bite-tr" id="about" aria-labelledby="about-h">
+  <section class="band about" id="about" aria-labelledby="about-h">
     <div class="wrap about__grid">
       <div class="about__l" data-reveal>
         <h2 class="about__h" id="about-h">Why <span>{site.name}</span></h2>

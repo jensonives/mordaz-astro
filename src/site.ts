@@ -35,9 +35,6 @@ export const site = {
   partOfSpeech: 'adj.',
   gloss: 'biting, scathing — of criticism, and of the person writing it',
 
-  /** Shown in the hero. 12–22 words. */
-  blurb:
-    'Every piece starts with something everybody says, and explains why it is wrong.',
 } as const;
 
 export const beats = ['sport', 'politics', 'economics'] as const;

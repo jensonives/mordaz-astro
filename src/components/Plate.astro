@@ -23,12 +23,12 @@ const { theySay, photo, photoAlt, photoCredit, class: cls = '' } = Astro.props;
 const label = `Plate: the received view — ${theySay} — struck through in red.`;
 ---
 {photo ? (
-  <figure class={`plate bite-tr ${cls}`}>
+  <figure class={`plate ${cls}`}>
     <img src={photo.startsWith('/') ? photo : `/${photo}`} alt={photoAlt} />
     {photoCredit && <span class="plate__credit">{photoCredit}</span>}
   </figure>
 ) : (
-  <figure class={`plate bite-tr ${cls}`} data-plate={theySay} role="img" aria-label={label}>
+  <figure class={`plate ${cls}`} data-plate={theySay} role="img" aria-label={label}>
     <span class="plate__fallback">They say: &ldquo;{theySay}&rdquo;</span>
   </figure>
 )}
