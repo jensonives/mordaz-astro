@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   /* Must match `url` in src/site.ts — Astro uses it for the sitemap and for
@@ -9,6 +10,11 @@ export default defineConfig({
   /* Pieces live at /puzzle/ rather than /puzzle.html, and the trailing slash
      is enforced so canonical URLs never end up duplicated in search results. */
   trailingSlash: 'always',
+
+  /* Writes sitemap-index.xml and sitemap-0.xml at build time, using `site`
+     above for the absolute URLs. This is what gets submitted to Search
+     Console; without it Google has to find every piece by following links. */
+  integrations: [sitemap()],
 
   markdown: {
     /* Smart punctuation is on by default in Astro 7 — the old `smartypants`
