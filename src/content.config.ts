@@ -31,6 +31,14 @@ const pieces = defineCollection({
 
     beat: z.enum(['sport', 'politics', 'economics']),
 
+    /**
+     * Short label for the generated plate — "UK politics", "Premier League".
+     * One or two words set very large, so anything longer will shrink to fit
+     * and lose the point. Omit it and the plate falls back to the beat.
+     * Ignored when the piece has a photograph.
+     */
+    topic: z.string().optional(),
+
     /** Publication date. Drives ordering everywhere. */
     date: z.coerce.date(),
 

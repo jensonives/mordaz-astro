@@ -19,6 +19,9 @@ const { Content } = await render(piece);
 
 const description = `They say ${d.theySay}. In fact ${d.inFact}. ${d.standfirst}`;
 
+/* What the generated plate is labelled, when there is no photograph. */
+const topic = d.topic ?? beatLabel(d.beat);
+
 /* A per-piece Open Graph card if one has been generated, otherwise the
    site-wide one — a missing image is worse than a generic image.
 
@@ -91,7 +94,7 @@ const jsonLd = {
 
     <figure class="afig">
       <Plate
-        theySay={d.theySay}
+        topic={topic}
         photo={d.photo}
         photoAlt={d.photoAlt}
         photoCredit={d.photoCredit}
@@ -105,8 +108,8 @@ const jsonLd = {
           </>
         ) : (
           <>
-            <b>They say</b>
-            <span>The received view, struck through &middot; {site.name}</span>
+            <b>{topic}</b>
+            <span>{site.name}</span>
           </>
         )}
       </figcaption>

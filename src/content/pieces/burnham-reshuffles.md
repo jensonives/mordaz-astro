@@ -4,6 +4,7 @@ theySay: "britain drifts for want of big ideas"
 inFact: "it drifts because nobody stays long enough"
 standfirst: "Britain drifted because its governments never lasted long enough to finish anything. The new prime minister should promise to keep his ministers where they are."
 beat: politics
+topic: "UK politics"
 date: 2026-09-29
 minutes: 5
 ---

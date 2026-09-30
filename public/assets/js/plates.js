@@ -1,21 +1,22 @@
 /* ═══════════════════════════════════════════════════════════════════════
    MORDAZ — plates
    ───────────────────────────────────────────────────────────────────────
-   Every piece gets a generated plate instead of a photograph or a stock
-   illustration. The plate sets the RECEIVED VIEW — the thing everybody says
-   — at poster scale, and strikes the red band through it.
+   A piece without a photograph gets a generated plate: the piece's TOPIC set
+   at poster scale on the ink, with a red rule under it.
 
-   That is the whole argument in one image: here is the conventional wisdom,
-   crossed out. The band is not decoration; it is the rebuttal.
+   It used to set the received view and strike a red band through it — the
+   argument as an image. That read as a caption arguing with itself above the
+   headline, and the band cut through the words it was meant to label. The
+   plate's job is to sit under a headline and say what the piece is about, so
+   it now does only that. Nothing is crossed out.
 
-   Two rules make this art direction rather than ornament:
+   Two rules keep it art direction rather than ornament:
 
-   1. It is DETERMINISTIC. The claim is the only seed, so a given piece always
+   1. It is DETERMINISTIC. The topic is the only seed, so a given piece always
       produces the same plate — every device, every load. Nothing is random
       at view time.
-   2. It is DERIVED FROM CONTENT. Line breaks, scale, which line gets struck
-      and where the band sits all fall out of the words themselves. No two
-      plates match, and none of it needed a photographer.
+   2. It is DERIVED FROM CONTENT. Line breaks and scale fall out of the words
+      themselves, and the palette comes from the CSS custom properties.
 
    Colours come from the CSS custom properties, so plates follow the palette
    rather than duplicating it.
@@ -116,24 +117,27 @@
     }
     svg.appendChild(grid);
 
-    /* ── set the claim ── */
+    /* ── set the topic ── */
     var words = claim.split(/\s+/);
-    var count = wide ? (words.length > 5 ? 2 : 1)
-                     : (words.length > 6 ? 3 : words.length > 2 ? 2 : 1);
+    /* Two words go on two lines rather than one. A short label set on a single
+       line is limited by the frame's width, which on a wide plate left the
+       bottom third empty; stacked, the height constraint binds instead and the
+       type fills the panel. A single word keeps its one big line. */
+    var count = words.length > 1 ? 2 : 1;
     var lines = wrap(words, count);
 
     var PROBE = 100;
     var text = el('text', {
       'font-family': "Archivo, 'Helvetica Neue', Arial, sans-serif",
       'font-size': PROBE,
-      'font-variation-settings': "'wdth' 96, 'wght' 800",
-      'letter-spacing': '-0.015em',
+      'font-variation-settings': "'wdth' 82, 'wght' 800",
+      'letter-spacing': '0.005em',
       fill: CRM
     });
 
     lines.forEach(function (ln, i) {
       var ts = el('tspan', { x: 0, dy: (i === 0 ? 0 : LH) + 'em' });
-      ts.textContent = ln;
+      ts.textContent = ln.toUpperCase();
       text.appendChild(ts);
     });
 
@@ -150,10 +154,7 @@
     });
     if (!widest) widest = PROBE * 0.52 * (lines[0] || '').length;
 
-    /* The claim has to be READABLE — the plate only works if you can see what
-       is being struck out.
-
-       The measure is what is left after the left inset, counted on both sides.
+    /* The measure is what is left after the left inset, counted on both sides.
        Sizing to the full frame width and only then indenting by `x` pushed the
        longest line up to 13% past the right edge — `fill` could reach 1.04 on
        its own — which cut the last word mid-letter and read as a broken image
@@ -166,18 +167,15 @@
        middle, which reads as a rendering fault rather than as a crop. Take
        whichever of the two constraints binds first. */
     var byWidth  = PROBE * ((W - 2 * x) * fill) / widest;
-    var byHeight = (H * 0.92) / ((lines.length - 1) * LH + 1);
+    /* Half the frame rather than nearly all of it: the eyebrow takes the top
+       and the rule takes the bottom, so the type gets the middle band. */
+    var byHeight = (H * 0.42) / ((lines.length - 1) * LH + 1);
     var size     = Math.min(byWidth, byHeight);
 
     var block = (lines.length - 1) * LH * size;
-    var first = (H - block) / 2 + size * 0.30 + (rand() - 0.5) * H * 0.06;
-
-    /* The jitter above is what stops every plate sitting at exactly the same
-       height. Clamp it so it can never push the type out of the frame: cap
-       height above the first baseline, descender below the last. */
-    var minFirst = H * 0.04 + size * 0.75;
-    var maxFirst = H * 0.96 - block - size * 0.22;
-    if (maxFirst > minFirst) first = Math.max(minFirst, Math.min(maxFirst, first));
+    /* Fixed, not jittered. A struck claim sitting at a different height on
+       every plate read as handmade; a label doing it reads as a mistake. */
+    var first = H * 0.30 + size * 0.72;
 
     text.setAttribute('font-size', size.toFixed(2));
     text.setAttribute('y', first.toFixed(2));
@@ -185,33 +183,40 @@
       ts.setAttribute('x', x.toFixed(2));
     });
 
-    /* ── the strike: a band through one line, with that line re-cut in ink ── */
-    var struck   = Math.floor(rand() * lines.length);
-    var baseline = first + struck * LH * size;
-    var bandH    = size * 0.30;
-    var bandY    = baseline - size * 0.32;
-
+    /* ── the furniture ───────────────────────────────────────────────────
+       Red stays, but as an accent beside the type rather than a band through
+       it: a rule under the last line, and a mark in the corner. The eyebrow
+       gives the upper third something to hold, so a two-word topic does not
+       leave two thirds of the panel empty. */
+    /* The rule sits above the type, not under it. On the lead plate the
+       bottom third is under a cream gradient that keeps the headline
+       readable, and a red rule down there came out pink. */
     svg.appendChild(el('rect', {
-      x: 0, y: bandY.toFixed(2), width: W, height: bandH.toFixed(2), fill: RED
+      x: x.toFixed(2),
+      y: (H * 0.20).toFixed(2),
+      width: (W * 0.16).toFixed(2),
+      height: (H * 0.022).toFixed(2),
+      fill: RED
     }));
 
-    var clipId = 'strike-' + (hash(claim) % 99991);
-    var defs = el('defs');
-    var clip = el('clipPath', { id: clipId });
-    clip.appendChild(el('rect', { x: 0, y: bandY.toFixed(2), width: W, height: bandH.toFixed(2) }));
-    defs.appendChild(clip);
-    svg.appendChild(defs);
+    var eyebrow = el('text', {
+      'font-family': "Archivo, 'Helvetica Neue', Arial, sans-serif",
+      'font-size': wide ? 26 : 32,
+      'font-variation-settings': "'wdth' 90, 'wght' 700",
+      'letter-spacing': '0.24em',
+      fill: CRM,
+      'fill-opacity': '.5',
+      x: x.toFixed(2),
+      y: (H * 0.14).toFixed(2)
+    });
+    eyebrow.textContent = 'MORDAZ';
+    svg.appendChild(eyebrow);
 
-    var cut = text.cloneNode(true);
-    cut.setAttribute('fill', INK);
-    cut.setAttribute('clip-path', 'url(#' + clipId + ')');
-    svg.appendChild(cut);
-
-    /* one red mark, clear of the band — the only free element */
-    svg.appendChild(el('circle', {
-      cx: (W * (0.05 + rand() * 0.04)).toFixed(1),
-      cy: (bandY > H / 2 ? H * 0.13 : H * 0.88).toFixed(1),
-      r: wide ? 13 : 17,
+    var markSize = wide ? 26 : 32;
+    svg.appendChild(el('rect', {
+      x: (W - x - markSize).toFixed(1),
+      y: (H * 0.14 - markSize).toFixed(1),
+      width: markSize, height: markSize,
       fill: RED
     }));
 

@@ -4,6 +4,7 @@ theySay: "a smaller deposit opens the housing ladder"
 inFact: "it opens a trapdoor into negative equity"
 standfirst: "Andy Burnham's Your First Home scheme gets the loan right and the deposit wrong. The Budget should fix it before young buyers pay the price."
 beat: economics
+topic: "Housing"
 date: 2026-09-30
 minutes: 6
 ---

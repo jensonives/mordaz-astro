@@ -65,7 +65,7 @@ collections:
         hint: >
           The received view you are arguing with, in the words someone who
           believes it would use. 4–9 words, lowercase, no full stop.
-          This becomes the image: set at poster scale and struck through in red.
+          This opens the piece and carries the archive alongside "In fact".
 
       - label: "In fact"
         name: "inFact"
@@ -84,6 +84,15 @@ collections:
         widget: "select"
         options: ["sport", "politics", "economics"]
         default: "politics"
+
+      - label: "Topic (for the illustration)"
+        name: "topic"
+        widget: "string"
+        required: false
+        hint: >
+          One or two words, shown very large on the generated illustration —
+          "UK politics", "Premier League", "Housing". Leave it empty and the
+          beat is used instead. Ignored if you add a photograph.
 
       - label: "Date"
         name: "date"

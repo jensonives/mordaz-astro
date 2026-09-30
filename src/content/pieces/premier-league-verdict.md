@@ -4,6 +4,7 @@ theySay: "the verdict shows the system works"
 inFact: "eight years shows it does not"
 standfirst: "It took eight years to reach a verdict on Manchester City. The next case this size belongs with a regulator that can demand the evidence on day one."
 beat: sport
+topic: "Premier League"
 date: 2026-09-29
 minutes: 5
 ---

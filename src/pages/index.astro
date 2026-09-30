@@ -56,7 +56,7 @@ const jsonLd = {
     {lead && (
       <article class="lead">
         <Plate
-          theySay={lead.data.theySay}
+          topic={lead.data.topic ?? beatLabel(lead.data.beat)}
           photo={lead.data.photo}
           photoAlt={lead.data.photoAlt}
           photoCredit={lead.data.photoCredit}
@@ -93,7 +93,7 @@ const jsonLd = {
             <article class="card" data-reveal>
               <a class="card__link" href={`/${p.id}/`}>
                 <Plate
-                  theySay={p.data.theySay}
+                  topic={p.data.topic ?? beatLabel(p.data.beat)}
                   photo={p.data.photo}
                   photoAlt={p.data.photoAlt}
                   class="card__fig"

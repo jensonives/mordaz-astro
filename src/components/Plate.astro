@@ -4,14 +4,16 @@
  *
  * With a photograph: renders it, and the CSS grades it into the site's three
  * colours automatically.
- * Without one: renders an empty frame that plates.js fills with the received
- * view set at poster scale and struck through in red.
+ * Without one: renders an empty frame that plates.js fills with the piece's
+ * topic set at poster scale.
  *
- * The claim used to live in three places that had to be kept in step by hand
- * (data-plate, aria-label, the no-JS fallback). Here they all come off one prop.
+ * `topic` arrives already resolved — the piece's own label if it set one,
+ * otherwise its beat — so the fallback logic lives in one place rather than
+ * at each of the three call sites.
  */
 interface Props {
-  theySay: string;
+  /** Short label for the generated plate, e.g. "UK politics". */
+  topic: string;
   photo?: string;
   photoAlt?: string;
   photoCredit?: string;
@@ -19,8 +21,7 @@ interface Props {
   class?: string;
 }
 
-const { theySay, photo, photoAlt, photoCredit, class: cls = '' } = Astro.props;
-const label = `Plate: the received view — ${theySay} — struck through in red.`;
+const { topic, photo, photoAlt, photoCredit, class: cls = '' } = Astro.props;
 ---
 {photo ? (
   <figure class={`plate ${cls}`}>
@@ -28,7 +29,7 @@ const label = `Plate: the received view — ${theySay} — struck through in red
     {photoCredit && <span class="plate__credit">{photoCredit}</span>}
   </figure>
 ) : (
-  <figure class={`plate ${cls}`} data-plate={theySay} role="img" aria-label={label}>
-    <span class="plate__fallback">They say: &ldquo;{theySay}&rdquo;</span>
+  <figure class={`plate ${cls}`} data-plate={topic} role="img" aria-label={`Illustration: ${topic}`}>
+    <span class="plate__fallback">{topic}</span>
   </figure>
 )}
