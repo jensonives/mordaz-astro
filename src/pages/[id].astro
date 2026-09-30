@@ -1,6 +1,6 @@
 ---
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Plate from '../components/Plate.astro';
@@ -25,9 +25,15 @@ const description = `They say ${d.theySay}. In fact ${d.inFact}. ${d.standfirst}
    This has to be checked, not assumed. Pointing og:image at a file that is
    not there makes every share of the piece render as an empty grey box, and
    nothing on the page tells you it has happened. Run `npm run og` to fill
-   the gaps. */
+   the gaps.
+
+   Resolved against the project root rather than import.meta.url: Astro
+   bundles this page before running it, so import.meta.url points into the
+   build output and every lookup missed. Silently, too — "no card" is a valid
+   answer here and the fallback is a real image, so every piece shipped the
+   generic card and nothing looked broken. */
 const card = `/assets/img/og-${piece.id}.png`;
-const cardOnDisk = fileURLToPath(new URL(`../../public${card}`, import.meta.url));
+const cardOnDisk = join(process.cwd(), 'public', card);
 const ogImage = existsSync(cardOnDisk) ? card : '/assets/img/og.png';
 
 const jsonLd = {
