@@ -80,26 +80,41 @@ if (!edge) {
   process.exit(1);
 }
 
-function shoot(payload, outPath) {
+/* Edge is launched once per image, and back-to-back launches drop roughly one
+   render in six: it exits 0, writes nothing, and says nothing on stderr. The
+   cause is one instance still tearing down as the next starts. Retrying is the
+   cheap fix — a fresh profile directory each time, and a short pause so the
+   previous process has finished with its own. */
+function shoot(payload, outPath, attempts = 3) {
   const hash = encodeURIComponent(JSON.stringify(payload));
   const target = `${pathToFileURL(template).href}#${hash}`;
-  const profile = join(tmpdir(), `mordaz-og-${Math.random().toString(36).slice(2, 10)}`);
 
-  const r = spawnSync(edge, [
-    '--headless=new',
-    '--disable-gpu',
-    '--hide-scrollbars',
-    '--force-device-scale-factor=1',
-    `--window-size=${payload.w},${payload.h}`,
-    '--virtual-time-budget=5000',
-    `--user-data-dir=${profile}`,
-    `--screenshot=${outPath}`,
-    target,
-  ], { stdio: 'ignore' });
+  for (let i = 1; i <= attempts; i++) {
+    const profile = join(tmpdir(), `mordaz-og-${Math.random().toString(36).slice(2, 10)}`);
 
-  if (r.error) throw r.error;
-  if (!existsSync(outPath)) throw new Error(`Edge produced nothing for ${outPath}`);
-  return (readFileSync(outPath).length / 1024).toFixed(1);
+    const r = spawnSync(edge, [
+      '--headless=new',
+      '--disable-gpu',
+      '--hide-scrollbars',
+      '--force-device-scale-factor=1',
+      `--window-size=${payload.w},${payload.h}`,
+      '--virtual-time-budget=5000',
+      `--user-data-dir=${profile}`,
+      `--screenshot=${outPath}`,
+      target,
+    ], { stdio: 'ignore' });
+
+    if (r.error) throw r.error;
+    if (existsSync(outPath)) return (readFileSync(outPath).length / 1024).toFixed(1);
+
+    if (i < attempts) {
+      /* Block briefly without pulling in a timers import. */
+      const until = Date.now() + 1200;
+      while (Date.now() < until) { /* wait */ }
+    }
+  }
+
+  throw new Error(`Edge produced nothing for ${outPath} after ${attempts} attempts`);
 }
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
