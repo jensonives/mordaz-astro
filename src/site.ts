@@ -22,7 +22,7 @@ export const site = {
    *
    * Flip to true on launch day. That is the switch that makes it public.
    */
-  live: false,
+  live: true,
 
   email: 'hello@mordaz.co.uk',
 
