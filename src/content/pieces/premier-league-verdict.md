@@ -5,6 +5,9 @@ inFact: "eight years shows it does not"
 standfirst: "It took eight years to reach a verdict on Manchester City. The next case this size belongs with a regulator that can demand the evidence on day one."
 beat: sport
 topic: "Premier League"
+photo: "assets/img/uploads/premier-league-stadium.jpg"
+photoAlt: "A floodlit football stadium at night, seen from high in the stands, with a capacity crowd surrounding the pitch."
+photoCredit: "Krzysztof Dubiel / Unsplash"
 date: 2026-09-29
 minutes: 5
 ---

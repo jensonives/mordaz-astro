@@ -24,8 +24,15 @@ interface Props {
 const { topic, photo, photoAlt, photoCredit, class: cls = '' } = Astro.props;
 ---
 {photo ? (
-  <figure class={`plate ${cls}`}>
+  <figure class={`plate plate--photo ${cls}`}>
     <img src={photo.startsWith('/') ? photo : `/${photo}`} alt={photoAlt} />
+    {/* The same label a generated plate carries, so a piece with a photograph
+        still reads as one of the set rather than a stock-image blog post. */}
+    <span class="plate__label" aria-hidden="true">
+      <span class="plate__eyebrow">Mordaz</span>
+      <span class="plate__rule"></span>
+      <span class="plate__topic">{topic}</span>
+    </span>
     {photoCredit && <span class="plate__credit">{photoCredit}</span>}
   </figure>
 ) : (

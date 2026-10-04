@@ -602,6 +602,40 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .has-duo .plate img{ filter:url(#mordaz-duotone) contrast(1.04); }
 
 /* a photograph carrying a caption credit */
+/* ── the label over a photograph ──────────────────────────────────────
+   A photo plate carries the same furniture as a generated one: eyebrow,
+   red rule, topic. Sized in cqw against the frame, so it scales with the
+   plate at card, lead and article widths exactly as the generated SVG
+   does, instead of needing a breakpoint for each.
+
+   The scrim is not decoration. Photos are graded into the palette, which
+   puts cream highlights all over them, and cream type on cream highlight
+   is unreadable. It is heaviest on the left where the type sits. */
+.plate--photo{ container-type:inline-size; }
+.plate__label{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+  gap:2.4cqw; padding:6cqw;
+  background:linear-gradient(90deg,
+    rgba(23,21,22,.93) 0%, rgba(23,21,22,.82) 40%,
+    rgba(23,21,22,.45) 72%, rgba(23,21,22,.1) 100%);
+}
+.plate__eyebrow{
+  font-family:var(--ff-display); font-variation-settings:'wdth' 90,'wght' 700;
+  font-size:max(.6rem, 2.4cqw); letter-spacing:.24em; text-transform:uppercase;
+  color:rgba(240,233,222,.6);
+}
+.plate__rule{ width:15cqw; height:max(3px,1.1cqw); background:var(--red); }
+.plate__topic{
+  font-family:var(--ff-display); font-variation-settings:'wdth' 82,'wght' 800;
+  font-size:min(12cqw, 4.6rem); line-height:.88; letter-spacing:.005em;
+  text-transform:uppercase; color:var(--cream); max-width:14ch;
+}
+
+/* The article figure prints the credit in its caption, so the overlaid one
+   would say it twice. Cards and the lead have no caption and keep theirs. */
+.afig .plate__credit{ display:none; }
+
 .plate__credit{
   position:absolute; right:.6rem; bottom:.5rem; z-index:2;
   font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
